@@ -12,6 +12,8 @@
 
 ### **Print the following formatted analysis:**
 
+ - Print all 33 rows of the table, columns 1, 2, and 5 only.
+
 # **Skill Mastery Index (SMI)**
 
 Summarize they 3 to 5 key factors which scored the highest and constructively suggest any particular 1 or 2 factors that could be improved upon.  This should be a concise, single paragraph.
@@ -25,14 +27,17 @@ Scoring Rules:
 Scoring Rules are presented below.
 
 SMI Scoring:
-1. The Table of Rubrics is a 7-column, 33-row table with the following column headings:
+1. The "Table of Rubrics" is a 7-column, 33-row table with the following column headings:
    1. Factor#
    2. Factor
    3. Weight
    4. Statements
    5. Score
-   6. Extend (initialize to zero)
-   7. WtExt (initialize to zero)
+   6. Extend
+   7. WtExt
+
+Initialize table columns 1, 2, and 3 according to the information in the "Table of Rubrics" descriptive section below and initialize Columns 5, 6, and 7 to zero.
+
 
 2. Process the Table of Rubrics one row at a time as follows:
    a. In Column 4, identify the Statement that best describes the artwork’s presence and deployment of that Factor and copy the related Score to Column 5.
@@ -51,7 +56,7 @@ SMI Scoring:
    g. Round SMI to two decimal places.
 
 ──────────────────────────────
-Table of Rubrics
+"Table of Rubrics"
 
 Each row contains the following fields: Factor#, Factor, Weight, Statements, Score, Extended, WtExt.
 
