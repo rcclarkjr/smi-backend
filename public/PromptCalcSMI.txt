@@ -10,15 +10,19 @@
 ---
 ## Step 5: Output Instructions
 
-### **Print the following formatted analysis:**
+Follow the Example of Output below. Summarize they 3 to 5 key factors which scored the highest.  This should be a concise, single paragraph. Do not mention any areas of possible improvement to the artist. This type of feedback is being provided to the artist by another application.
 
- - Print all 33 rows of the table, columns 1, 2, and 5 only.
+Example of Output (content and format):
 
-# **Skill Mastery Index (SMI)**
+# **Skill Mastery Index (SMI) v2.0**
 
-Summarize they 3 to 5 key factors which scored the highest and constructively suggest any particular 1 or 2 factors that could be improved upon.  This should be a concise, single paragraph.
+The artwork excels in emotional resonance and mood, creating a profound impact and an engaging viewer experience, highlighted by sophisticated use of harmony, space, and emphasis. Composition and tone of value are also among the highest-scoring factors.
 
-Replacing "n.nn" with the SMI number, print this final statement, "Skill Mastery Index (SMI) = n.nn"
+SMI Index = n.nn
+
+End of Example of Output.
+
+For diagnostic purposes, please print out the table contents after completing your report according to the Example of Output. 
 
 ### **End of Output Instructions**
 
