@@ -10,16 +10,15 @@
 ---
 ## Step 5: Output Instructions
 
-Print the final SMI and RI indices in the manner of the Example Output.
+### **Print the following formatted analysis:**
 
-### **Example Output:**
+# **Skill Mastery Index (SMI)**
 
-H1:  "Calculation of Skill Mastery Index (SMI)"
-Print the contents of the table -- all 33 rows -- but only Columns 1, 2, and 5.
+Summarize they 3 to 5 key factors which scored the highest and constructively suggest any particular 1 or 2 factors that could be improved upon.  This should be a concise, single paragraph.
 
-H3:  "Skill Mastery Index (SMI) =" n.nn (SMI rounded to two decimals)
+Replacing "n.nn" with the SMI number, print this final statement, "Skill Mastery Index (SMI) = n.nn"
 
-### **End of Example Output.**
+### **End of Output Instructions**
 
 ---
 Scoring Rules:
