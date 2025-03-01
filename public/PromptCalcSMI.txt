@@ -232,21 +232,21 @@ Processing Instructions:
 
 3. Each Factor Score (Factors Table) = the sum of the 5 Scores for the 5 questions related to that Factor (Questions Table).
 
-4. Calculate Extend (4 decimal places) = Score x Weight
+4. For each row, calculate Extend = Score x Weight. Round to 4 decimal places.
 
-5. Calculate BFB = Weight / Score
+5. For each row, calculate BFB = Weight / Score. Round to 2 decimal places.
 
-6. SMI = sum of the Extend column, rounded to 1 decimal place.
+6. Calculate SMI as the sum of the Extend column. Round to 1 decimal place.
 
 7. Output report to user:
 
 a. Briefly describe the style and subject matter of the Artwork in 3 to 5 sentences.
 
-b. Highlight the 3 or 4 lowest BFB results in narrative form: For each Factor, provide one-sentence containing the name and definition of the Factor. Then provide a narrative summary of how the factor was deployed while making references to specific shapes, items, and figures in the Artwork. Limit this section to a maximum of 8 sentences.
+b. Note that the lower the BFB score, the better the artist deployed that factor. Highlight the 3 or 4 lowest BFB results in narrative form as follows: For each Factor, provide one-sentence containing the name and definition of the Factor. Then provide a narrative summary of how the factor was deployed while making references to specific shapes, items, and figures in the Artwork. Limit this section to a maximum of 8 sentences.
 
 c. Print: “Skill Mastery Index (SMI) = n.n”
 
-8. If Debugging_Mode = true, print all contents of the Factors Table followed by the Questions Table.
+8. If Debugging_Mode = true, print all contents of the Factors Table.
 
 END OF PROMPT
 
