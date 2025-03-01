@@ -1,10 +1,14 @@
+Certainly! Below is the **100% revised prompt** with all suggested fixes applied, formatted as plain text for easy copying and pasting into a .txt file:
+
+---
+
 Objective: to calculate Skill Mastery Index ("SMI").
 
 Inputs: (1) uploaded image file ("Artwork") and (2) data within initialized tables within this prompt.
 
 Debugging_Mode = true.
 
-AI Role: You are a fine art expert, appraiser, and critic with an encouraging but honest and straightforward voice. 
+AI Role: You are a fine art expert, appraiser, and critic with an encouraging but honest and straightforward voice.
 
 Forget all context from previous analyses and reset tables to original initialization as defined in this prompt.
 
@@ -16,7 +20,6 @@ The two tables have one field in common, "Factor" (Column 2 in each table).
 
 Factors Table:
 
-```
 Factor#,Factor,Weight,Score,Extend,BFB
 1,Line,5.00%,-,-,-
 2,Shape,4.50%,-,-,-
@@ -51,11 +54,9 @@ Factor#,Factor,Weight,Score,Extend,BFB
 31,Mood,3.00%,-,-,-
 32,Viewer Engagement,3.00%,-,-,-
 33,Emotional Resonance,4.00%,-,-,-
-```
 
 Questions Table:
 
-```
 Question#,Factor,Question,Score
 1,Line,Does the artwork use line weight variation to enhance composition?,-
 2,Line,Do the lines effectively guide the viewer’s eye?,-
@@ -222,65 +223,41 @@ Question#,Factor,Question,Score
 163,Emotional Resonance,Is there a strong personal or universal message?,-
 164,Emotional Resonance,Does resonance linger beyond initial viewing?,-
 165,Emotional Resonance,Is emotional impact enhanced through composition and technique?,-
-```
-
 
 Processing Instructions:
-1. The Questions Table presents 165 questions.  There are 5 questions for each of the 33 factors.  Each question is a yes/no question. Edge cases (answers on the cusp or undecided) should default to "no".  Place a 1 in the Score column for each yes answer.  Place a 0 in the Score column for each no answer.
 
-2. Once the Questions Table Score column is complete, move to processing the Factors Table as follows.  
+1. Questions Table Scoring:
+   - Each question in the Questions Table is a yes/no question. Assign a score of 1 for "yes" and 0 for "no." Edge cases (e.g., undecided answers) must default to 0.
 
-3. Each Factor Score (Factors Table) = the sum of the 5 Scores for the 5 questions related to that Factor (Questions Table).
+2. Factors Table Scoring:
+   - For each factor, calculate the Score as the sum of the 5 question scores (ranging from 0 to 5).
 
-4. For each row, calculate Extend = Score x Weight. Round to 4 decimal places.
+3. Extend Calculation:
+   - For each factor, calculate Extend = Score × Weight. Round Extend to 4 decimal places.
 
-5. For each row, calculate BFB = Weight / Score. Round BFB to 2 decimal places.
+4. BFB Calculation:
+   - For each factor, calculate BFB = Weight / Score. Round BFB to 2 decimal places.
 
-6. Calculate SMI as the sum of all 33 data rows of the Extend column. Round SMI  to 1 decimal place.  This makes SMI the weighted average of all 33 Factor Scores.
+5. SMI Calculation:
+   - Calculate the Skill Mastery Index (SMI) as the sum of all 33 Extend values. Round the SMI to 1 decimal place.
+   - Validate that the SMI is within the range of 0 to 5. If the calculated SMI exceeds 5.0, stop processing and return an error message: "Error: SMI exceeds maximum value of 5.0. Please check calculations."
 
-7. Output report to user:
+6. Debugging Mode:
+   - If Debugging_Mode = true, verify the following:
+     - The sum of all weights in the Factors Table equals 100%.
+     - All Scores in the Factors Table are between 0 and 5.
+     - All Extend values are calculated as Score × Weight.
+     - The SMI is the sum of all Extend values and does not exceed 5.0.
 
-a. Briefly describe the style and subject matter of the Artwork in 3 to 5 sentences.
-
-b. Note that the lower the BFB score, the better the artist deployed that factor. Highlight the 3 or 4 lowest BFB results in narrative form as follows: For each Factor, provide one-sentence containing the name and definition of the Factor. Then provide a narrative summary of how the factor was deployed while making references to specific shapes, items, and figures in the Artwork. Limit this section to a maximum of 8 sentences.
-
-c. Print: “Skill Mastery Index (SMI) = n.n”
+7. Output Report to User:
+   a. Briefly describe the style and subject matter of the Artwork in 3 to 5 sentences.
+   b. Note that the lower the BFB score, the better the artist deployed that factor. Highlight the 3 or 4 lowest BFB results in narrative form as follows: For each Factor, provide one-sentence containing the name and definition of the Factor. Then provide a narrative summary of how the factor was deployed while making references to specific shapes, items, and figures in the Artwork. Limit this section to a maximum of 8 sentences.
+   c. Print: “Skill Mastery Index (SMI) = n.n”
 
 8. If Debugging_Mode = true, print the Factors Table.
 
 END OF PROMPT
 
+---
 
-
-
-
-
-
-
-
-
-
-
-Example Final Output:
-Calculation of Skill Mastery Index (SMI)
-
-Description:
-The artwork is a vibrant abstract painting characterized by bold, sweeping brushstrokes and a dynamic interplay of geometric and organic shapes. The color palette is dominated by warm reds and oranges, contrasted with cool blues and greens, creating a sense of energy and movement. The composition is balanced yet unpredictable, drawing the viewer’s eye across the canvas.
-
-Summary:
-
-Line: The use of line weight variation effectively guides the viewer’s eye through the painting, particularly in the bold, curved strokes in the upper left quadrant.
-
-Color/Hue: The harmonious yet contrasting color palette enhances the emotional impact, especially in the central area where warm and cool colors intersect.
-
-Movement: The artwork’s sense of motion is achieved through the repeated diagonal shapes in the lower right, creating a dynamic flow across the composition.
-
-Conclusion:
-Skill Mastery Index (SMI) = 8.3
-
-Example Debug Table (if Debugging_Mode = true):
-Factor #	Factor Name	Answer #1	Answer #2	Answer #3	Answer #4	Answer #5	Score	Weight	Extended
-1	Line	Yes	Yes	No	Yes	No	3	0.037	0.1110
-2	Shape	Yes	Yes	Yes	No	Yes	4	0.037	0.1480
-...	...	...	...	...	...	...	...	...	...
-End of Processing.
+This revised prompt should now prevent errors like SMI = 7.4 and ensure the calculation stays within the correct range of 0 to 5. Let me know if you need further adjustments!
