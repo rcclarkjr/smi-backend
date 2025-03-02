@@ -278,11 +278,9 @@ Question#,Factor,Question,Score
 2. Provide **one concise explanation per factor**, ensuring the total explanation does not exceed **8 sentences in total**.
 
 ```
-### **Skill Mastery Index (SMI) = [Final Score]**
+### **Skill Mastery Index (SMI) = {{SMI}}**
 ```
 - Provide a **2-sentence interpretation** of what this SMI level represents.
 
 ```
-### **CSV Files**
-- Provide a link to download a CSV file of the Factors Table.
-- Provide a link to download a CSV file of the Questions Table.
+
