@@ -1,0 +1,3 @@
+# Ignore everything in public folder except CSV files
+public/*
+!public/*.csv
