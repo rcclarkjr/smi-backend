@@ -14,13 +14,6 @@ The Artwork to be analyzed might range from pure abstract to photo-realism. The 
 3. **Only analyze the provided artwork**—DO NOT hallucinate content that is not explicitly visible.
 
 ---
-
-## **Artwork Title Constraint**
-- The title provided by the user **must be displayed EXACTLY as given.**
-- **DO NOT generate or infer a title.** If no title is provided, display: `"Untitled"`
-- If the AI attempts to generate a title, this is an error.
-
----
 ## **CSV Export Toggle**
 - If `ExportCSV = Yes`, generate two CSV tables:
   1. **Factors Table** (Factor#, Factor, Weight, Score, Extend, BFB)
