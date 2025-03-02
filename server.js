@@ -31,7 +31,7 @@ app.post("/analyze", async (req, res) => {
                     { role: "system", content: "You are an expert art critic. Analyze the given image." },
                     { role: "user", content: [{ type: "text", text: prompt }, { type: "image_url", image_url: { url: `data:image/jpeg;base64,${image}` } } ] }
                 ],
-                max_tokens: 1000
+                max_tokens: 4096
             },
             {
                 headers: {
