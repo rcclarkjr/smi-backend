@@ -264,7 +264,7 @@ Question#,Factor,Question,Score
 ```
 ## **Analysis of Skill Mastery**
 
-### Artwork Title: [Insert User Provided Title]
+### Artwork Title: {{artTitle}}
 ```
 - Ensure **user’s exact title is displayed** without modification.
 - Generate a **brief, fact-based description** of the artwork’s **style and subject**.
@@ -299,8 +299,9 @@ Factor#  Factor              Weight   Score   Extend   BFB
 ```
 
 ### **Questions Table Output**
-- The **Questions Table must be printed in full** (DO NOT OMIT or summarize).
-- Format the output as follows:
+- The **Questions Table must be printed in full** (DO NOT OMIT or summarize), including all rows whereas 5 rows are being compressed into 1.
+- **DO NOT truncate or summarize the table.**
+- Format the output as follows: 
 
 ```
 Q1  Q2  Q3  Q4  Q5  
@@ -308,6 +309,7 @@ Q1  Q2  Q3  Q4  Q5
 X   X   X   X   X   
 X   X   X   X   X   
 ...
+
 ```
 
 ---
