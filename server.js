@@ -28,7 +28,7 @@ app.post("/analyze", async (req, res) => {
        // ########################### CSV TOGGLE ################################ 
        // ✅ Toggle CSV Export (Set to "Yes" for debugging, "No" for normal mode)
         const exportCSV = "Yes";  // Change to "No" when you don't need CSVs
-        const finalPrompt = `ExportCSV = ${exportCSV}\n\n${prompt}`;
+        const finalPrompt = `Title: ${artTitle}\nExportCSV = ${exportCSV}\n\n${prompt}`;
 
         const response = await axios.post(
             "https://api.openai.com/v1/chat/completions",
@@ -55,7 +55,8 @@ app.post("/analyze", async (req, res) => {
         let questionsCSV = "";
 
         if (exportCSV === "Yes") {
-            const csvRegex = /```csv\n([\s\S]+?)\n```/g;
+            const csvRegex = /```csv\s*([\s\S]+?)\s*```/g;
+
             let match;
             let csvFiles = 0;
 
@@ -84,10 +85,10 @@ app.post("/analyze", async (req, res) => {
 
         res.json({
             analysis: analysisText,
-            csvLinks: exportCSV === "Yes" ? {
-                factorsCSV: factorsCSV ? "/factors.csv" : null,
-                questionsCSV: questionsCSV ? "/questions.csv" : null
-            } : null
+		csvLinks: (exportCSV === "Yes" && (factorsCSV || questionsCSV)) ? {
+  		  factorsCSV: factorsCSV ? "/factors.csv" : "#",
+   		 questionsCSV: questionsCSV ? "/questions.csv" : "#"
+		} : null
         });
 
     } catch (error) {
