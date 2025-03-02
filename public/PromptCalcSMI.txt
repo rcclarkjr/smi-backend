@@ -268,7 +268,7 @@ Question#,Factor,Question,Score
 ```
 - Ensure **user’s exact title is displayed** without modification.
 - Generate a **brief, fact-based description** of the artwork’s **style and subject**.
-  - **DO NOT invent details**—base this ONLY on what is visible.
+- **DO NOT invent details**—base this ONLY on what is visible.
 
 ```
 ### **Factors with Best Execution (Top 3 by Lowest BFB)**
@@ -282,39 +282,6 @@ Question#,Factor,Question,Score
 - Provide a **2-sentence interpretation** of what this SMI level represents.
 
 ```
-### **Finalized Tables**
-```
-
-### **Complete Factors Table Output**
-- The **Factors Table must be printed in full**, including all rows.
-- **DO NOT truncate or summarize the table.**
-- **Print all rows, exactly formatted as follows:**
-
-```
-Factor#  Factor              Weight   Score   Extend   BFB  
-----------------------------------------------------------
-1        Line               5.00%    X       X.XXXX   X.XX  
-2        Shape              4.50%    X       X.XXXX   X.XX  
-...
-```
-
-### **Questions Table Output**
-- The **Questions Table must be printed in full** (DO NOT OMIT or summarize), including all rows whereas 5 rows are being compressed into 1.
-- **DO NOT truncate or summarize the table.**
-- Format the output as follows: 
-
-```
-Q1  Q2  Q3  Q4  Q5  
---------------------
-X   X   X   X   X   
-X   X   X   X   X   
-...
-
-```
-
----
-
-## **Strict Output Formatting Rules**
-1. **DO NOT print steps or processing logs**—only show the final structured report.  
-2. **Align all table columns properly** for easy readability.  
-3. **Only include factual analysis** based on visible elements of the artwork.  
+### **CSV Files**
+- Provide a link to download a CSV file of the Factors Table.
+- Provide a link to download a CSV file of the Questions Table.
