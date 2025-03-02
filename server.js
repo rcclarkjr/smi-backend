@@ -28,8 +28,8 @@ app.post("/analyze", async (req, res) => {
         // ########################### CSV TOGGLE ################################ 
         // ✅ Toggle CSV Export (Set to "Yes" for debugging, "No" for normal mode)
         const exportCSV = "Yes";  // Change to "No" when you don't need CSVs
-        const finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". Ensure this title appears **only once** in the final report, directly under "Analysis of Skill Mastery". Do NOT print the title anywhere else in the response.\n\n${prompt}`;
-
+        
+	const finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". The prompt will handle where to place this title.\n\n${prompt}`;
 
         const response = await axios.post(
             "https://api.openai.com/v1/chat/completions",
@@ -103,11 +103,11 @@ app.post("/analyze", async (req, res) => {
             analysisText = analysisText.replace(csvRegex, "").trim();
         }
 
-        // ✅ Debugging Log: Show Final API Response Sent to UI
-        const finalResponse = {
-            analysis: `### Title: ${artTitle}\n\n${analysisText}`, // ✅ Ensure Title is included
-            csvLinks: csvLinks
-        };
+const finalResponse = {
+  analysis: analysisText,
+  csvLinks: csvLinks
+};
+
         console.log("✅ Final API Response:", JSON.stringify(finalResponse, null, 2));
 
         res.json(finalResponse);
