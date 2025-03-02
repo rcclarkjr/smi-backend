@@ -81,14 +81,19 @@ app.post("/analyze", async (req, res) => {
             console.log("Factors CSV:\n", factorsCSV);
             console.log("Questions CSV:\n", questionsCSV);
 
+	// Create public dir if it doesn't exist
+	const publicDir = path.join(__dirname, "public");
+	if (!fs.existsSync(publicDir)) {
+   	 fs.mkdirSync(publicDir);
+	}
             // ✅ Save CSV files if found
             if (factorsCSV) {
-                const factorsPath = path.join("/data", "factors.csv");
+                const factorsPath = path.join(publicDir, "factors.csv");
                 fs.writeFileSync(factorsPath, factorsCSV, "utf8");
                 console.log(`✅ Factors CSV saved at ${factorsPath}`);
             }
             if (questionsCSV) {
-                const questionsPath = path.join("/data", "questions.csv");
+                const questionsPath = path.join(publicDir, "questions.csv");
                 fs.writeFileSync(questionsPath, questionsCSV, "utf8");
                 console.log(`✅ Questions CSV saved at ${questionsPath}`);
             }
