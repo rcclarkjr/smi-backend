@@ -17,7 +17,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // ✅ Load API key securely
 
 app.post("/analyze", async (req, res) => {
     try {
-        const { prompt, image } = req.body;
+        const { prompt, image, artTitle } = req.body;
 
         if (!prompt || !image) {
             return res.status(400).json({ error: "Prompt and image are required" });
