@@ -25,10 +25,10 @@ app.post("/analyze", async (req, res) => {
             return res.status(400).json({ error: "Prompt and image are required" });
         }
 
-       // ########################### CSV TOGGLE ################################ 
-       // ✅ Toggle CSV Export (Set to "Yes" for debugging, "No" for normal mode)
+        // ########################### CSV TOGGLE ################################ 
+        // ✅ Toggle CSV Export (Set to "Yes" for debugging, "No" for normal mode)
         const exportCSV = "Yes";  // Change to "No" when you don't need CSVs
-        const finalPrompt = `Title: ${artTitle}\nExportCSV = ${exportCSV}\n\n${prompt}`;
+        const finalPrompt = `ExportCSV = ${exportCSV}\n\n${prompt}`;
 
         const response = await axios.post(
             "https://api.openai.com/v1/chat/completions",
@@ -50,13 +50,15 @@ app.post("/analyze", async (req, res) => {
 
         let analysisText = response.data.choices[0].message.content;
 
+        // ✅ Debugging Log: Show Full OpenAI Response
+        console.log("🔍 Full AI Response:\n", analysisText);
+
         // ✅ Extract CSV Data (if enabled)
         let factorsCSV = "";
         let questionsCSV = "";
 
         if (exportCSV === "Yes") {
-            const csvRegex = /```csv\s*([\s\S]+?)\s*```/g;
-
+            const csvRegex = /```csv\n([\s\S]+?)\n```/g;
             let match;
             let csvFiles = 0;
 
@@ -69,27 +71,38 @@ app.post("/analyze", async (req, res) => {
                 }
             }
 
+            // ✅ Debugging Log: Show Extracted CSV Data
+            console.log("✅ Extracted CSV Data:");
+            console.log("Factors CSV:\n", factorsCSV);
+            console.log("Questions CSV:\n", questionsCSV);
+
             // ✅ Save CSV files if found
             if (factorsCSV) {
-                fs.writeFileSync(path.join(__dirname, "public", "factors.csv"), factorsCSV, "utf8");
-                console.log("✅ Factors CSV saved.");
+                const factorsPath = path.join(__dirname, "public", "factors.csv");
+                fs.writeFileSync(factorsPath, factorsCSV, "utf8");
+                console.log(`✅ Factors CSV saved at ${factorsPath}`);
             }
             if (questionsCSV) {
-                fs.writeFileSync(path.join(__dirname, "public", "questions.csv"), questionsCSV, "utf8");
-                console.log("✅ Questions CSV saved.");
+                const questionsPath = path.join(__dirname, "public", "questions.csv");
+                fs.writeFileSync(questionsPath, questionsCSV, "utf8");
+                console.log(`✅ Questions CSV saved at ${questionsPath}`);
             }
 
             // ✅ Remove CSV data from final response
             analysisText = analysisText.replace(csvRegex, "").trim();
         }
 
-        res.json({
+        // ✅ Debugging Log: Show Final API Response Sent to UI
+        const finalResponse = {
             analysis: analysisText,
-		csvLinks: (exportCSV === "Yes" && (factorsCSV || questionsCSV)) ? {
-  		  factorsCSV: factorsCSV ? "/factors.csv" : "#",
-   		 questionsCSV: questionsCSV ? "/questions.csv" : "#"
-		} : null
-        });
+            csvLinks: exportCSV === "Yes" ? {
+                factorsCSV: factorsCSV ? "/factors.csv" : null,
+                questionsCSV: questionsCSV ? "/questions.csv" : null
+            } : null
+        };
+        console.log("✅ Final API Response:", JSON.stringify(finalResponse, null, 2));
+
+        res.json(finalResponse);
 
     } catch (error) {
         console.error("🔴 OpenAI API Error:", error.response?.data || error.message);
@@ -98,4 +111,5 @@ app.post("/analyze", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
