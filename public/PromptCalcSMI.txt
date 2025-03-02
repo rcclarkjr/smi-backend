@@ -264,14 +264,15 @@ Question#,Factor,Question,Score
 ```
 ## **Analysis of Skill Mastery**
 
-### Artwork Title: {{artTitle}}
+### Title: {{artTitle}}
+(Confirm: The title should be exactly as entered by user.)
 ```
 - Ensure **user’s exact title is displayed** without modification.
 - Generate a **brief, fact-based description** of the artwork’s **style and subject**.
 - **DO NOT invent details**—base this ONLY on what is visible.
 
 ```
-### **Factors with Best Execution (Top 3 by Lowest BFB)**
+### **Notable Strengths**
 ```
 1. Identify the **3 Factors with the lowest BFB scores** (lower BFB = better execution).  
 2. Provide **one concise explanation per factor**, ensuring the total explanation does not exceed **8 sentences in total**.
