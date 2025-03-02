@@ -8,13 +8,31 @@ The Artwork to be analyzed might range from pure abstract to photo-realism. The 
 
 ---
 
-## **Assumptions**
-1. Each analysis is **completely independent**. All prior context **must be forgotten** before a new evaluation begins.
-2. The user **provides the artwork title**, which must be used exactly as given (without modification or substitution).
-3. The **Factors and Questions Tables must be fully reinitialized** to zero before any calculations are performed.
-4. **Every question must receive an answer.** If there is insufficient information, the default answer is **No (0).**
-5. The **SMI score is capped at 5.0.** Any score exceeding this is an error.
-6. The **Questions Table should print in groups of 5 per row** for easy alignment with the Factors Table.
+## **Pre-Evaluation Reset (Critical)**
+1. **FORGET ALL PRIOR CONTEXT** before starting this evaluation.
+2. **DO NOT assume past evaluations are relevant**—treat each analysis as fully independent.
+3. The user **provides the artwork title** at runtime.  
+   - **Use it EXACTLY as given** (without modification or substitution).
+   - **DO NOT reference or retain any past artwork titles.**
+4. **Only analyze the provided artwork**—DO NOT hallucinate content that is not explicitly visible.
+
+---
+
+## **Processing Instructions (Silent Execution)**
+- **DO NOT print step-by-step calculations.**
+- **DO NOT display tables until the final report.**
+- **DO NOT generate debug output unless explicitly requested.**
+- ONLY the **final structured report** should be displayed.
+
+---
+
+## **Step 1: Reset and Initialize Tables**
+- The **Factors Table** is fully reset (scores set to zero).
+- The **Questions Table** is fully reset (scores set to zero).
+- **Every question must receive an answer**:
+  - **Yes → 1**
+  - **No → 0**
+  - If unsure, default to **No (0).**
 
 ## **Factors Table Initialization**
 Factor#,Factor,Weight,Score,Extend,BFB
@@ -220,120 +238,70 @@ Question#,Factor,Question,Score
 164,Emotional Resonance,Does resonance linger beyond initial viewing?,-
 165,Emotional Resonance,Is emotional impact enhanced through composition and technique?,-
 
-## **Processing Instructions (Step-by-Step)**
+---
 
-### **Step 1: Reset Context and Initialize Tables**
-1. **Forget all prior analysis** before starting.
-2. Reinitialize the **Factors Table**:
-   - Columns **Factor#, Factor, Weight** remain static.
-   - Columns **Score, Extend, BFB** must be set to **zero** before proceeding.
-3. Reinitialize the **Questions Table**:
-   - Columns **Question#, Factor, Question** remain static.
-   - Column **Score** must be set to **zero** before proceeding.
+## **Step 2: Compute Scores**
+1. **Calculate Factor Scores**  
+   - Sum the **5 Question Scores** for each Factor (range: 0–5).
+  
+2. **Calculate Extended and BFB Values**  
+   - **Extend = Score × Weight** (rounded to 4 decimal places).  
+   - **BFB = Weight / Score** (rounded to 2 decimal places).  
+   - If **Score = 0**, set **BFB = "N/A"** (to avoid division errors).
 
-### **Step 2: Answer Questions**
-1. Each question **must receive a score**:
-   - **Yes → 1**
-   - **No → 0**
-   - If unsure or lacking enough information, default to **No (0).**
-2. Record these scores in the **Questions Table (Column 4).**
-
-### **Step 3: Compute Factor Scores**
-1. For each **Factor**:
-   - Sum the **5 Question Scores** that share the same factor.
-   - Store this sum in the **Score column** of the Factors Table (range: 0–5).
-
-### **Step 4: Compute Extended and BFB Values**
-1. Calculate **Extend**: `Extend = Score × Weight`, rounded to **4 decimal places**.
-2. Calculate **BFB**: `BFB = Weight / Score`, rounded to **2 decimal places**.
-   - If **Score = 0**, set **BFB = "N/A"** to avoid division errors.
-
-### **Step 5: Calculate Skill Mastery Index (SMI)**
-1. Compute **SMI = Sum of Extend column (rounded to 1 decimal place).**
-2. If **SMI > 5.0**, print: `"Error: SMI exceeds maximum value of 5.0. Please report this to rclark@valoraanalytics.com."`
+3. **Calculate Final Skill Mastery Index (SMI)**
+   - **SMI = Sum of Extend column** (rounded to 1 decimal place).  
+   - If **SMI > 5.0**, print:  
+     `"Error: SMI exceeds maximum value of 5.0. Please report this issue."`
 
 ---
 
-## **Report Generation**
-
-### **Step 6: Generate Output**
-#### **(1) Report Title and Artwork Information**
+## **Step 3: Generate Final Report**
 ```
 ## **Analysis of Skill Mastery**
 
-### Artwork Title: [User Provided Title]
+### Artwork Title: [Insert User Provided Title]
 ```
 - Ensure **user’s exact title is displayed** without modification.
-- Generate a **brief 3-5 sentence description** of the artwork’s style and subject.
+- Generate a **brief, fact-based description** of the artwork’s **style and subject**.
+  - **DO NOT invent details**—base this ONLY on what is visible.
 
-#### **(2) Highlighting Best Execution Factors**
-1. Identify **Factors with the lowest BFB scores** (lower BFB = better execution).
-2. List the **top Factors (max of 7)**, including:
-   - Factor name & definition.
-   - A brief **narrative explanation** of how that Factor is executed well.
-
-#### **(3) Display SMI Score with Interpretation**
 ```
-### **Skill Mastery Index (SMI) = n.n**
+### **Factors with Best Execution**
+```
+1. Identify **Factors with the lowest BFB scores** (lower BFB = better execution).  
+2. List the **top 7 Factors**, including:
+   - **Factor name & definition**.
+   - A **brief explanation** of why this Factor is executed well.
+
+```
+### **Skill Mastery Index (SMI) = [Final Score]**
 ```
 - Provide a **2-sentence interpretation** of what this SMI level represents.
 
-#### **(4) Print Final Tables**
-##### **Factors Table (All Columns, Aligned)**
+```
+### **Finalized Tables**
+```
+**Factors Table (Fully Aligned)**
 ```
 Factor#  Factor              Weight   Score   Extend   BFB  
 ----------------------------------------------------------
-1        Line               5.00%    4       0.2000   0.0125  
-2        Shape              4.50%    5       0.2250   0.0090  
+1        Line               5.00%    X       X.XXXX   X.XX  
+2        Shape              4.50%    X       X.XXXX   X.XX  
 ...
 ```
-
-##### **Questions Table (Scores Only, Grouped in Sets of 5 per Row)**
+**Questions Table (Scores Only, Grouped in Sets of 5 per Row)**
 ```
 Q1  Q2  Q3  Q4  Q5  
 --------------------
-1   0   1   1   1   
-1   1   1   1   1   
+X   X   X   X   X   
+X   X   X   X   X   
 ...
 ```
-
-**Formatting Requirements:**
-1. **Factors Table:** Display **all columns, fully aligned**.
-2. **Questions Table:** Display **only the Score column** in groups of **5 per row**.
-3. **Ensure proper spacing & headers** for easy readability.
-
 ---
 
-## **Example Output (For Formatting Reference Only – Not Content)**
-```
-## **Analysis of Skill Mastery**
-
-### Artwork Title: Winter’s Whisper
-
-This artwork is a captivating example of expressive realism combined with an element of impressionism, depicted through a textured application of paint that suggests a chilly winter scene. The use of muted colors and dynamic brushwork captures the harsh beauty of a snowy landscape. In the foreground, an ethereal female figure, painted with a lighter touch, appears almost as a part of the snowy surroundings, providing a stark contrast to the solid, more roughly painted tipi and dark trees.
-
-### **Factors with Best Execution**
-- **Texture:** The intentional, varied texture contributes significantly to the sensory impact of the scene.
-- **Mood:** The consistent, evocative mood draws the viewer into a silent winter story.
-- **Composition:** Each element within the artwork contributes to a harmoniously balanced whole, portraying a well-orchestrated narrative.
-
-### **Skill Mastery Index (SMI) = 4.6**
-This artwork successfully integrates multiple elements in a harmonious manner, demonstrating high skill in artistic execution across various formal elements. The calculated SMI of 4.6 reflects this high degree of artistic craftsmanship and thematic coherence.
-
-### **Content of Tables**
-**Factor Table**
-Factor#  Factor      Weight   Score   Extend   BFB  
--------------------------------------------------
-1        Line       5.00%    4       0.2000   0.0125  
-2        Shape      4.50%    5       0.2250   0.0090  
-...
-
-**Questions Table**
-Q1  Q2  Q3  Q4  Q5  
---------------------
-1   0   1   1   1   
-1   1   1   1   1   
-...
-```
-
+## **Strict Output Formatting Rules**
+1. **DO NOT print steps or processing logs**—only show the final structured report.  
+2. **Align all table columns properly** for easy readability.  
+3. **Only include factual analysis** based on visible elements of the artwork.  
 
