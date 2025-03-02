@@ -247,6 +247,10 @@ Step 9. Follow Example Output (below) when executing this Step.
    d. Note that the lower the BFB score, the better the artist deployed that factor. Highlight the lowest BFB results in narrative form as follows: For each of the lowest BFBs, provide one-sentence containing the name and definition of that Factor, then provide a narrative summary of how that Factor was deployed while making reference to any specific, related shapes, items, and figures in the Artwork. Limit this section to a maximum of 7 sentences.
    e. Print: “Skill Mastery Index (SMI) = n.n” followed by 2 sentences interpreting the meaning of that level of SMI.
 
+Step 10. Print content of both tables with formatted alignment of each column:
+    a. Factor Table, all Columns, with one print line per table Row.
+    b. Questions Table, Column 4 only, with one print line presenting 5 table Rows.
+
 Example Output:
 
 ## **Analysis of Skill Mastery**
@@ -265,5 +269,18 @@ This artwork is a captivating example of expressive realism combined with an ele
 
 ### **Skill Mastery Index (SMI) = 4.6**
 This artwork successfully integrates multiple elements in a harmonious manner, demonstrating high skill in artistic execution across various formal elements. The calculated SMI of 4.2 reflects this high degree of artistic craftsmanship and thematic coherence.
+
+### **Content of Tables**
+**Factor Table**
+Factor#	Factor	Weight	Score	Extend	BFB
+1	Line	5.00%	4	0.2000	0.0125
+2	Shape	4.50%	5	0.2250	0.0090
+etc.
+
+**Questions Table**
+Q1	Q2	Q3	Q4	Q5
+1	1	0	1	1
+1	1	1	1	1	
+etc.
 
 END OF PROMPT
