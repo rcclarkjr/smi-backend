@@ -20,7 +20,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // ✅ Load API key securely
 app.post("/analyze", async (req, res) => {
     try {
         const { prompt, image, artTitle } = req.body;
-        
+
         if (!prompt || !image) {
             return res.status(400).json({ error: "Prompt and image are required" });
         }
@@ -28,7 +28,7 @@ app.post("/analyze", async (req, res) => {
         // ########################### CSV TOGGLE ################################ 
         // ✅ Toggle CSV Export (Set to "Yes" for debugging, "No" for normal mode)
         const exportCSV = "Yes";  // Change to "No" when you don't need CSVs
-        const finalPrompt = `ExportCSV = ${exportCSV}\n\n${prompt}`;
+        const finalPrompt = `ExportCSV = ${exportCSV}\nArtwork Title: ${artTitle}\n\n${prompt}`;
 
         const response = await axios.post(
             "https://api.openai.com/v1/chat/completions",
@@ -36,7 +36,10 @@ app.post("/analyze", async (req, res) => {
                 model: "gpt-4-turbo",
                 messages: [
                     { role: "system", content: "You are an expert art critic. Analyze the given image." },
-                    { role: "user", content: [{ type: "text", text: finalPrompt }, { type: "image_url", image_url: { url: `data:image/jpeg;base64,${image}` } } ] }
+                    { role: "user", content: [
+                        { type: "text", text: finalPrompt },
+                        { type: "image_url", image_url: { url: `data:image/jpeg;base64,${image}` } }
+                    ]}
                 ],
                 max_tokens: 4096
             },
@@ -56,6 +59,7 @@ app.post("/analyze", async (req, res) => {
         // ✅ Extract CSV Data (if enabled)
         let factorsCSV = "";
         let questionsCSV = "";
+        let csvLinks = null;
 
         if (exportCSV === "Yes") {
             const csvRegex = /```csv\n([\s\S]+?)\n```/g;
@@ -88,17 +92,20 @@ app.post("/analyze", async (req, res) => {
                 console.log(`✅ Questions CSV saved at ${questionsPath}`);
             }
 
+            // ✅ Ensure CSV download links are provided
+            csvLinks = {
+                factorsCSV: factorsCSV ? "/factors.csv" : null,
+                questionsCSV: questionsCSV ? "/questions.csv" : null
+            };
+
             // ✅ Remove CSV data from final response
             analysisText = analysisText.replace(csvRegex, "").trim();
         }
 
         // ✅ Debugging Log: Show Final API Response Sent to UI
         const finalResponse = {
-            analysis: analysisText,
-            csvLinks: exportCSV === "Yes" ? {
-                factorsCSV: factorsCSV ? "/factors.csv" : null,
-                questionsCSV: questionsCSV ? "/questions.csv" : null
-            } : null
+            analysis: `### Title: ${artTitle}\n\n${analysisText}`, // ✅ Ensure Title is included
+            csvLinks: csvLinks
         };
         console.log("✅ Final API Response:", JSON.stringify(finalResponse, null, 2));
 
@@ -112,4 +119,3 @@ app.post("/analyze", async (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
