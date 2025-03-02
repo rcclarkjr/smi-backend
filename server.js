@@ -24,14 +24,18 @@ app.post("/analyze", async (req, res) => {
         }
 
         const response = await axios.post(
-            "https://api.openai.com/v1/chat/completions",
-            {
-                model: "gpt-4-turbo",
-                messages: [
-                    { role: "system", content: "You are an expert art critic. Analyze the given image." },
-                    { role: "user", content: [{ type: "text", text: prompt }, { type: "image_url", image_url: { url: `data:image/jpeg;base64,${image}` } } ] }
-                ],
-                max_tokens: 4096
+    "https://api.openai.com/v1/chat/completions",
+    {
+        model: "gpt-4-turbo",
+        messages: [
+            { role: "system", content: "You are an expert art critic. Analyze the given image." },
+            { role: "user", content: [
+                { type: "text", text: `The title of this artwork is: "${artTitle}". Ensure the title is displayed exactly as given.` }, 
+                { type: "text", text: prompt },
+                { type: "image_url", image_url: { url: `data:image/jpeg;base64,${image}` } }
+            ]}
+        ],
+        max_tokens: 4096
             },
             {
                 headers: {
