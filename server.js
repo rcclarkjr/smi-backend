@@ -83,12 +83,12 @@ app.post("/analyze", async (req, res) => {
 
             // ✅ Save CSV files if found
             if (factorsCSV) {
-                const factorsPath = path.join(__dirname, "public", "factors.csv");
+                const factorsPath = path.join("/data", "factors.csv");
                 fs.writeFileSync(factorsPath, factorsCSV, "utf8");
                 console.log(`✅ Factors CSV saved at ${factorsPath}`);
             }
             if (questionsCSV) {
-                const questionsPath = path.join(__dirname, "public", "questions.csv");
+                const questionsPath = path.join("/data", "questions.csv");
                 fs.writeFileSync(questionsPath, questionsCSV, "utf8");
                 console.log(`✅ Questions CSV saved at ${questionsPath}`);
             }
