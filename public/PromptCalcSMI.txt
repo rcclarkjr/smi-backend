@@ -264,9 +264,9 @@ Question#,Factor,Question,Score
 ## **Step 3: Generate Final Report**
 ```
 ## **Analysis of Skill Mastery**
-
+- Ensure the artTitle appears only once, directly below this header.)
 ### Title: {{artTitle}}
-```
+- Do NOT print the title anywhere else in the report.)
 - Generate a **brief, fact-based description** of the artwork’s **style and subject**.
 - **DO NOT invent details**—base this ONLY on what is visible.
 
