@@ -21,7 +21,15 @@ The Artwork to be analyzed might range from pure abstract to photo-realism. The 
 - If the AI attempts to generate a title, this is an error.
 
 ---
+## **CSV Export Toggle**
+- If `ExportCSV = Yes`, generate two CSV tables:
+  1. **Factors Table** (Factor#, Factor, Weight, Score, Extend, BFB)
+  2. **Questions Table** (Question#, Factor, Question, Score)
+- Ensure CSV formatting is correct and ready for direct file saving.
+- **Do NOT include CSV data in the final report**—it should be separate.
+- If `ExportCSV = No`, ignore this section and generate only the final report.
 
+---
 ## **Processing Instructions (Silent Execution)**
 - **DO NOT print step-by-step calculations.**
 - **DO NOT display tables until the final report.**
@@ -265,9 +273,7 @@ Question#,Factor,Question,Score
 ## **Analysis of Skill Mastery**
 
 ### Title: {{artTitle}}
-(Confirm: The title should be exactly as entered by user.)
 ```
-- Ensure **user’s exact title is displayed** without modification.
 - Generate a **brief, fact-based description** of the artwork’s **style and subject**.
 - **DO NOT invent details**—base this ONLY on what is visible.
 
