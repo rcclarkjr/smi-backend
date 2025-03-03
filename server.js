@@ -36,7 +36,9 @@ app.post("/analyze", async (req, res) => {
             {
                 model: "gpt-4-turbo",
                 messages: [
-                    { role: "system", content: "You are an expert art critic. Analyze the given image." },
+
+			{ role: "system", content: "You are an expert art critic. Analyze the given image. When instructed to export CSV data, format it precisely within ```csv code blocks." },
+
                     { role: "user", content: [
                         { type: "text", text: finalPrompt },
                         { type: "image_url", image_url: { url: `data:image/jpeg;base64,${image}` } }
