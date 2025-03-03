@@ -100,12 +100,11 @@ app.post("/analyze", async (req, res) => {
                 console.log(`✅ Questions CSV saved at ${questionsPath}`);
             }
 
-            // ✅ Ensure CSV download links are provided
-            csvLinks = {
-                factorsCSV: factorsCSV ? "/factors.csv" : null,
-                questionsCSV: questionsCSV ? "/questions.csv" : null
-            };
-
+      // ✅ Ensure CSV download links are provided
+csvLinks = {
+    factorsCSV: factorsCSV ? "https://smi-	backend-8n2f.onrender.com/factors.csv" : null,
+    questionsCSV: questionsCSV ? "https://smi-backend-8n2f.onrender.com/questions.csv" : null
+};
             // ✅ Remove CSV data from final response
             analysisText = analysisText.replace(csvRegex, "").trim();
         }
