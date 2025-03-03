@@ -22,12 +22,31 @@ The Artwork to be analyzed might range from pure abstract to photo-realism. The 
 - **Do NOT include CSV data in the final report**—it should be separate.
 - If `ExportCSV = No`, ignore this section and generate only the final report.
 
+
+## **CSV Export Toggle**
+- If `ExportCSV = Yes`, generate two CSV tables in the exact format below:
+  1. **Factors Table**:
+  ```csv
+  Factor#,Factor,Weight,Score,Extend,BFB
+  1,Composition,0.15,4.5,0.85,0.12
+  ```
+  
+  2. **Questions Table**:
+  ```csv
+  Question#,Factor,Question,Score
+  1,Composition,"Is the composition balanced?",4
+  ```
+- These CSV blocks MUST be enclosed in triple backticks with csv label as shown above
+- DO NOT include CSV data in the final analysis report
+
+
 ---
 ## **Processing Instructions (Silent Execution)**
 - **DO NOT print step-by-step calculations.**
 - **DO NOT display tables until the final report.**
 - **DO NOT generate debug output unless explicitly requested.**
 - ONLY the **final structured report** should be displayed.
+- **DO NOT mention anything having to do with BFB in the final report.**
 
 ---
 
