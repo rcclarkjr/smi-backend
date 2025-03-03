@@ -102,7 +102,7 @@ app.post("/analyze", async (req, res) => {
 
       // ✅ Ensure CSV download links are provided
 csvLinks = {
-    factorsCSV: factorsCSV ? "https://smi-	backend-8n2f.onrender.com/factors.csv" : null,
+    factorsCSV: factorsCSV ? "https://smi-backend-8n2f.onrender.com/factors.csv" : null,
     questionsCSV: questionsCSV ? "https://smi-backend-8n2f.onrender.com/questions.csv" : null
 };
             // ✅ Remove CSV data from final response
