@@ -14,16 +14,9 @@ The Artwork to be analyzed might range from pure abstract to photo-realism. The 
 3. **Only analyze the provided artwork**—DO NOT hallucinate content that is not explicitly visible.
 
 ---
+
 ## **CSV Export Toggle**
-- If `ExportCSV = Yes`, generate two CSV tables:
-  1. **Factors Table** (Factor#, Factor, Weight, Score, Extend, BFB)
-  2. **Questions Table** (Question#, Factor, Question, Score)
-- Ensure CSV formatting is correct and ready for direct file saving.
-- **Do NOT include CSV data in the final report**—it should be separate.
 - If `ExportCSV = No`, ignore this section and generate only the final report.
-
-
-## **CSV Export Toggle**
 - If `ExportCSV = Yes`, generate two CSV tables in the exact format below:
   1. **Factors Table**:
   ```csv
@@ -36,8 +29,8 @@ The Artwork to be analyzed might range from pure abstract to photo-realism. The 
   Question#,Factor,Question,Score
   1,Composition,"Is the composition balanced?",4
   ```
-- These CSV blocks MUST be enclosed in triple backticks with csv label as shown above
-- DO NOT include CSV data in the final analysis report
+- These CSV blocks MUST be enclosed in triple backticks with csv label as shown above.
+- DO NOT include CSV data in the final analysis report.
 
 
 ---
@@ -51,12 +44,12 @@ The Artwork to be analyzed might range from pure abstract to photo-realism. The 
 ---
 
 ## **Step 1: Reset and Initialize Tables**
-- The **Factors Table** is fully reset (scores set to zero).
-- The **Questions Table** is fully reset (scores set to zero).
-- **Every question must receive an answer**:
+- The **Factors Table** is fully reset (Score, Extend, and BFB columns set to zero).
+- The **Questions Table** is fully reset (Score column set to zero).
+- **Every Question must receive an answer (Score)**:
   - **Yes → 1**
   - **No → 0**
-  - If unsure, default to **No (0).**
+  - If unsure (edge cases), default to **No (0).**
 
 ## **Factors Table Initialization**
 Factor#,Factor,Weight,Score,Extend,BFB
@@ -265,10 +258,10 @@ Question#,Factor,Question,Score
 ---
 
 ## **Step 2: Compute Scores**
-1. **Calculate Factor Scores**  
-   - Sum the **5 Question Scores** for each Factor (range: 0–5).
+1. **Calculate Factor Score**  
+   - Sum the **5 Question Scores** for each Factor (possible range: 0–5).
   
-2. **Calculate Extended and BFB Values**  
+2. **Calculate Extend and BFB Values**  
    - **Extend = Score × Weight** (rounded to 4 decimal places).  
    - **BFB = Weight / Score** (rounded to 2 decimal places).  
    - If **Score = 0**, set **BFB = "N/A"** (to avoid division errors).
@@ -276,7 +269,7 @@ Question#,Factor,Question,Score
 3. **Calculate Final Skill Mastery Index (SMI)**
    - **SMI = Sum of Extend column** (rounded to 1 decimal place).  
    - If **SMI > 5.0**, print:  
-     `"Error: SMI exceeds maximum value of 5.0. Please report this issue."`
+     `"Error: SMI exceeds maximum value of 5.0. Please report this issue to rclark@valoraanalytics.com."`
 
 ---
 
@@ -288,11 +281,12 @@ Question#,Factor,Question,Score
 - Do NOT print the title anywhere else in the report.)
 - Generate a **brief, fact-based description** of the artwork’s **style and subject**.
 - **DO NOT invent details**—base this ONLY on what is visible.
+- DO NOT make any references to BFB (calculations or meanings).
 
 ```
 ### **Notable Strengths**
 ```
-1. Identify the **3 Factors with the lowest BFB scores** (lower BFB = better execution).  
+1. Identify the **3 Factors with the lowest BFB scores** (lower BFB = better execution on higher-valued Factors).  
 2. Provide **one concise explanation per factor**, ensuring the total explanation does not exceed **8 sentences in total**.
 
 ```
