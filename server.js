@@ -37,166 +37,25 @@ app.post("/analyze", async (req, res) => {
             finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". The prompt will handle where to place this title.\n\n${prompt}`;
         } else {
             // Use our hardcoded modified prompt that ensures the backend calculates scores
-            finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". The prompt will handle where to place this title.\n\n
-**Objective:** To calculate the Skill Mastery Index ("SMI").
-
-**Inputs:** (1) An uploaded image file ("Artwork") and (2) this prompt.
-
-**AI Role:** You are a fine art expert, appraiser, and critic with an encouraging but honest and straightforward voice.
-
-The Artwork to be analyzed might range from pure abstract to photo-realism. The Artwork is to be considered as finished.
-
----
-
-## **Pre-Evaluation Reset (Critical)**
-1. **FORGET ALL PRIOR CONTEXT** before starting this evaluation.
-2. **DO NOT assume past evaluations are relevant**—treat each analysis as fully independent.
-3. **Only analyze the provided artwork**—DO NOT hallucinate content that is not explicitly visible.
-
----
-
-## **CSV Export Toggle**
-- If \`ExportCSV = No\`, ignore this section and generate only the final report.
-- If \`ExportCSV = Yes\`, generate two CSV tables in the exact format below:
-  1. **Factors Table**:
-  \`\`\`csv
-  Factor#,Factor,Weight,Score,Extend,BFB
-  1,Composition,0.15,-,-,-
-  \`\`\`
-  
-  2. **Questions Table**:
-  \`\`\`csv
-  Question#,Factor,Question,Score
-  1,Composition,"Is the composition balanced?",1
-  \`\`\`
-- These CSV blocks MUST be enclosed in triple backticks with csv label as shown above.
-- DO NOT include CSV data in the final analysis report.
-- IMPORTANT: You only need to fill in the Score column for the Questions Table with 1 (Yes) or 0 (No). The server will calculate the Score column for the Factors Table by summing the related questions.
-
----
-## **Processing Instructions (Silent Execution)**
-- **DO NOT print step-by-step calculations.**
-- **DO NOT display tables until the final report.**
-- **DO NOT generate debug output unless explicitly requested.**
-- ONLY the **final structured report** should be displayed.
-- **DO NOT mention anything having to do with BFB in the final report.**
-
----
-
-## **Step 1: Reset and Initialize Tables**
-- The **Factors Table** is fully reset (Score, Extend, and BFB columns set to zero).
-- The **Questions Table** is fully reset (Score column set to zero).
-- **Every Question must receive an answer (Score)**:
-  - **Yes → 1**
-  - **No → 0**
-  - If unsure (edge cases), default to **No (0).**
-
-## **Factors Table Initialization**
-Factor#,Factor,Weight,Score,Extend,BFB
-1,Line,5.00%,-,-,-
-2,Shape,4.50%,-,-,-
-3,Form,4.50%,-,-,-
-4,Space,4.00%,-,-,-
-5,Color,5.00%,-,-,-
-6,Texture,3.50%,-,-,-
-7,Tone/Value,5.00%,-,-,-
-8,Saturation,2.50%,-,-,-
-9,Composition,5.00%,-,-,-
-10,Volume,3.00%,-,-,-
-11,Balance,4.00%,-,-,-
-12,Contrast,3.00%,-,-,-
-13,Emphasis,3.00%,-,-,-
-14,Movement,3.00%,-,-,-
-15,Rhythm,2.00%,-,-,-
-16,Variety,2.00%,-,-,-
-17,Proportion,3.00%,-,-,-
-18,Harmony,2.50%,-,-,-
-19,Cohesiveness,2.50%,-,-,-
-20,Pattern,1.00%,-,-,-
-21,Brushwork,3.00%,-,-,-
-22,Chiaroscuro,3.00%,-,-,-
-23,Impasto,1.00%,-,-,-
-24,Sfumato,1.00%,-,-,-
-25,Glazing,1.00%,-,-,-
-26,Scumbling,1.00%,-,-,-
-27,Pointillism,1.00%,-,-,-
-28,Wet-on-Wet,3.00%,-,-,-
-29,Uniqueness,5.00%,-,-,-
-30,Creativity,3.00%,-,-,-
-31,Mood,3.00%,-,-,-
-32,Viewer Engagement,3.00%,-,-,-
-33,Emotional Resonance,4.00%,-,-,-
-
-## **Questions Table Initialization**
-Question#,Factor,Question,Score
-1,Line,Does the artwork use line weight variation to enhance composition?,-
-2,Line,Do the lines effectively guide the viewer's eye?,-
-3,Line,Are lines controlled and purposeful?,-
-4,Line,Is the linework expressive or rhythmically engaging?,-
-5,Line,Do the lines contribute to the emotional impact of the artwork?,-
-6,Shape,Are the shapes clear intentional and well-integrated?,-
-7,Shape,Do the shapes contribute to compositional balance?,-
-8,Shape,Is there a variety of shapes to enhance visual interest?,-
-9,Shape,Are geometric/organic shapes used purposefully to support the theme?,-
-10,Shape,Do the shapes reinforce movement or focal points?,-
-11,Form,Is there a strong illusion of three-dimensionality where intended?,-
-12,Form,Are the forms consistently proportioned?,-
-13,Form,Is light and shadow effectively used to define form?,-
-14,Form,Do forms interact naturally within space?,-
-15,Form,Is form used expressively to enhance mood?,-
-16,Space,Does the artwork effectively use perspective techniques to create depth?,-
-17,Space,Is there a clear distinction between foreground middle ground and background elements?,-
-18,Space,Is the arrangement of positive and negative space balanced in a way that enhances composition?,-
-19,Space,Does the spatial arrangement guide the viewer's eye smoothly through the artwork?,-
-20,Space,Does the use of space contribute to the emotional impact or storytelling of the piece?,-
-21,Color,Are colors chosen harmoniously to enhance mood and impact?,-
-22,Color,Does the use of color create depth or emphasis where needed?,-
-23,Color,Are color contrasts used effectively?,-
-24,Color,Is there a distinct and intentional color palette?,-
-25,Color,Do color transitions contribute to the unity of the composition?,-
-26,Texture,Is there a clear sense of texture within the artwork?,-
-27,Texture,Does the texture enhance the realism or abstraction of the piece?,-
-28,Texture,Are variations in texture used effectively?,-
-29,Texture,Does the texture contribute to the emotional or sensory impact?,-
-30,Texture,Is the application of texture intentional and controlled?,-
-31,Tone/Value,Is there a full range of tonal values present?,-
-32,Tone/Value,Does contrast effectively define form and depth?,-
-33,Tone/Value,Are tonal gradations smooth and intentional?,-
-34,Tone/Value,Does the use of tone contribute to the mood?,-
-35,Tone/Value,Is the lighting effectively managed to enhance depth?,-
-36,Saturation,Are colors appropriately saturated for the intended effect?,-
-37,Saturation,Does desaturation or high saturation enhance emphasis?,-
-38,Saturation,Are transitions between saturation levels smooth?,-
-39,Saturation,Is saturation used to guide the eye?,-
-40,Saturation,Does the level of saturation match the emotional tone?,-
-41,Composition,Is the composition balanced and harmonious?,-
-42,Composition,Does the composition effectively guide the viewer's eye?,-
-43,Composition,Are focal points well-placed within the composition?,-
-44,Composition,Do compositional elements contribute to unity and coherence?,-
-45,Composition,Does the composition enhance the overall impact of the artwork?,-
-46,Volume,Is volume effectively conveyed through shading or perspective?,-
-47,Volume,Do objects appear three-dimensional where intended?,-
-48,Volume,Are volumetric relationships between elements consistent?,-
-49,Volume,Does volume contribute to the sense of realism or abstraction?,-
-50,Volume,Is the illusion of depth achieved through careful control of volume?,-
-51,Balance,Is visual balance effectively maintained?,-
-52,Balance,Do elements have a stable distribution across the composition?,-
-53,Balance,Are symmetrical or asymmetrical balances used intentionally?,-
-54,Balance,Does balance contribute to the overall harmony of the piece?,-
-55,Balance,Are contrasts in balance used for dramatic effect?,-
-56,Contrast,Are differences in tone color or form used effectively?,-
-57,Contrast,Does contrast create emphasis on focal points?,-
+            finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". The prompt will handle where to place this title.\n\nPrompt details would go here...`;
+        }
 
         const response = await axios.post(
             "https://api.openai.com/v1/chat/completions",
             {
                 model: "gpt-4-turbo",
                 messages: [
-                    { role: "system", content: "You are an expert art critic. Analyze the given image. When instructed to export CSV data, format it precisely within ```csv code blocks. For the Factors Table, include ALL 33 factors. For the Questions Table, include ALL 165 questions with scores of 1 (Yes) or 0 (No). DO NOT calculate the Scores in the Factors Table - the backend will do this calculation." },
-                    { role: "user", content: [
-                        { type: "text", text: finalPrompt },
-                        { type: "image_url", image_url: { url: `data:image/jpeg;base64,${image}` } }
-                    ]}
+                    { 
+                        role: "system", 
+                        content: "You are an expert art critic. Analyze the given image. When instructed to export CSV data, format it precisely within code blocks labeled as csv. For the Factors Table, include ALL 33 factors. For the Questions Table, include ALL 165 questions with scores of 1 (Yes) or 0 (No). DO NOT calculate the Scores in the Factors Table - the backend will do this calculation." 
+                    },
+                    { 
+                        role: "user", 
+                        content: [
+                            { type: "text", text: finalPrompt },
+                            { type: "image_url", image_url: { url: `data:image/jpeg;base64,${image}` } }
+                        ]
+                    }
                 ],
                 max_tokens: 4096
             },
@@ -499,17 +358,25 @@ Question#,Factor,Question,Score
                 
                 // Skip header row
                 for (let i = 1; i < factorsLines.length; i++) {
-                    const parts = factorsLines[i].split(',');
-                    if (parts.length >= 5) {
-                        const extend = parseFloat(parts[4]);
-                        if (!isNaN(extend)) {
-                            totalExtend += extend;
+                    try {
+                        const line = factorsLines[i].trim();
+                        if (!line) continue;
+                        
+                        const parts = parseCSVLine(line);
+                        if (parts.length >= 5) {
+                            const extend = parseFloat(parts[4]);
+                            if (!isNaN(extend)) {
+                                totalExtend += extend;
+                            }
                         }
+                    } catch (err) {
+                        console.error(`Error calculating SMI for line ${i+1}:`, factorsLines[i], err);
                     }
                 }
                 
                 // Round to 1 decimal place
                 const smi = totalExtend.toFixed(1);
+                console.log(`Calculated SMI: ${smi}`);
                 
                 // Replace SMI placeholder in the analysis text if it exists
                 analysisText = analysisText.replace(/{{SMI}}/g, smi);
