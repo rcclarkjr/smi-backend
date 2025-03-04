@@ -85,7 +85,7 @@ app.post("/analyze", async (req, res) => {
         messages: [
           { 
             role: "system", 
-            content: "You are an expert art critic. Analyze the given image. When instructed to export CSV data, format it precisely within code blocks labeled as csv. For the Factors Table, include ALL 33 factors. For the Questions Table, include ALL 165 questions with scores of 1 (Yes) or 0 (No). DO NOT calculate the Scores in the Factors Table - the backend will do this calculation. Always begin your analysis with a heading 'Analysis of Skill Mastery' and ensure no CSV data appears in the final report." 
+            content: "You are an expert art critic with a discerning eye. When analyzing the artwork, be thorough and honest. For techniques that are completely absent from the artwork (like Pointillism, Impasto, etc. if they're not present), answer 'No' to all related questions. Analyze the given image with precision and careful attention to detail. When instructed to export CSV data, format it precisely within code blocks labeled as csv. For the Factors Table, include ALL 33 factors. For the Questions Table, include ALL 165 questions with honest scores of 1 (Yes) or 0 (No). DO NOT give all positive scores - be critical and truthful. DO NOT calculate the Scores in the Factors Table - the backend will do this calculation. Always begin your analysis with a heading 'Analysis of Skill Mastery'." 
           },
           { 
             role: "user", 
@@ -311,7 +311,12 @@ app.post("/analyze", async (req, res) => {
                 if (factorTotals[factorName] !== undefined) {
                   const score = factorTotals[factorName];
                   const extend = (score * weight).toFixed(4);
-                  const bfb = score === 0 ? "N/A" : (weight / score).toFixed(2);
+                  
+                  // Set BFB to "N/A" if score is 0, otherwise calculate it
+                  let bfb = "N/A";
+                  if (score > 0) {
+                    bfb = (weight / score).toFixed(2);
+                  }
                   
                   // Reconstruct the line with the calculated score
                   parts[3] = score; // Integer score
@@ -336,38 +341,37 @@ app.post("/analyze", async (req, res) => {
             
             // Update factorsCSV with the calculated scores
             factorsCSV = updatedFactorsLines.join('\n');
-          }
-          
-          // Calculate SMI
-          let smi = "0.0";
-          try {
-            // Create factors map for sum calculation
-            const factorsData = {};
+            
+            // Calculate SMI by summing the Extend values
+            let totalExtend = 0;
+            let factorCount = 0;
+            
             for (let i = 1; i < updatedFactorsLines.length; i++) {
-              const line = updatedFactorsLines[i].trim();
-              if (!line) continue;
-              
-              const parts = parseCSVLine(line);
-              if (parts.length >= 5) {
-                const extend = parseFloat(parts[4]);
-                if (!isNaN(extend)) {
-                  factorsData[parts[1]] = extend;
+              try {
+                const line = updatedFactorsLines[i].trim();
+                if (!line) continue;
+                
+                const parts = parseCSVLine(line);
+                if (parts.length >= 5) {
+                  const extend = parseFloat(parts[4]);
+                  if (!isNaN(extend)) {
+                    totalExtend += extend;
+                    factorCount++;
+                  }
                 }
+              } catch (err) {
+                console.error(`Error calculating SMI for line ${i+1}:`, err.message);
               }
             }
             
-            // Sum all extends
-            const totalExtend = Object.values(factorsData).reduce((sum, val) => sum + val, 0);
-            
+            // Calculate the average Score based on the Extends
             // Round to 1 decimal place
-            smi = totalExtend.toFixed(1);
-            console.log(`Calculated SMI: ${smi}`);
-          } catch (err) {
-            console.error("Error calculating SMI:", err.message);
+            const smi = totalExtend.toFixed(1);
+            console.log(`Calculated SMI: ${smi} from ${factorCount} factors`);
+            
+            // Replace SMI placeholder in the analysis text if it exists
+            analysisText = analysisText.replace(/{{SMI}}/g, smi);
           }
-          
-          // Replace SMI placeholder in the analysis text if it exists
-          analysisText = analysisText.replace(/{{SMI}}/g, smi);
         }
       }
 
