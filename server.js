@@ -75,6 +75,9 @@ app.post("/analyze", async (req, res) => {
         // Debugging Log: Show Full OpenAI Response
         console.log("🔍 Full AI Response:\n", analysisText);
 
+        // Remove any userStyle tags from the response
+        analysisText = analysisText.replace(/<userStyle>.*?<\/userStyle>/g, '');
+
         // Extract CSV Data (if enabled)
         let factorsCSV = "";
         let questionsCSV = "";
@@ -252,34 +255,6 @@ app.post("/analyze", async (req, res) => {
                         const factorsHeader = factorsLines[0];
                         const updatedFactorsLines = [factorsHeader];
                         
-                        // Function to handle CSV parsing with quotes
-                        function parseCSVLine(line) {
-                            const fields = [];
-                            let inQuote = false;
-                            let field = '';
-                            
-                            for (let i = 0; i < line.length; i++) {
-                                const char = line[i];
-                                
-                                if (char === '"') {
-                                    // Toggle the in-quote flag
-                                    inQuote = !inQuote;
-                                } else if (char === ',' && !inQuote) {
-                                    // End of a field
-                                    fields.push(field);
-                                    field = '';
-                                } else {
-                                    // Regular character
-                                    field += char;
-                                }
-                            }
-                            
-                            // Don't forget the last field
-                            fields.push(field);
-                            
-                            return fields;
-                        }
-                        
                         // Skip header row
                         for (let i = 1; i < factorsLines.length; i++) {
                             try {
@@ -413,6 +388,9 @@ app.post("/analyze", async (req, res) => {
             }
         }
 
+        // Remove any remaining userStyle tags
+        analysisText = analysisText.replace(/<userStyle>.*?<\/userStyle>/g, '');
+
         const finalResponse = {
             analysis: analysisText,
             csvLinks: csvLinks,
@@ -421,13 +399,4 @@ app.post("/analyze", async (req, res) => {
 
         console.log("✅ Final API Response:", JSON.stringify(finalResponse, null, 2));
 
-        res.json(finalResponse);
-
-    } catch (error) {
-        console.error("🔴 OpenAI API Error:", error.response?.data || error.message);
-        res.status(500).json({ error: error.response?.data?.error?.message || "OpenAI request failed" });
-    }
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+        res.
