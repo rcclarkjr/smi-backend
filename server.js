@@ -19,7 +19,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 app.post("/analyze", async (req, res) => {
     try {
-        const { prompt, image, artTitle } = req.body;
+        const { prompt, image, artTitle, artistName } = req.body;
 
         if (!prompt || !image) {
             return res.status(400).json({ error: "Prompt and image are required" });
@@ -32,12 +32,15 @@ app.post("/analyze", async (req, res) => {
         // First check if the prompt contains our modified instructions; if not, use the hardcoded version
         const promptHasModifications = prompt.includes("IMPORTANT: You only need to fill in the Score column for the Questions Table with 1 (Yes) or 0 (No)");
         
+        // Construct the prompt with art title and artist name
         let finalPrompt;
+        let artistInfo = artistName ? `Artist: "${artistName}"` : "";
+        
         if (promptHasModifications) {
-            finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". The prompt will handle where to place this title.\n\n${prompt}`;
+            finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". ${artistInfo}\nThe prompt will handle where to place this information.\n\n${prompt}`;
         } else {
             // Use our hardcoded modified prompt that ensures the backend calculates scores
-            finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". The prompt will handle where to place this title.\n\nPrompt details would go here...`;
+            finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". ${artistInfo}\nThe prompt will handle where to place this information.\n\nPrompt details would go here...`;
         }
 
         const response = await axios.post(
@@ -76,6 +79,33 @@ app.post("/analyze", async (req, res) => {
         let factorsCSV = "";
         let questionsCSV = "";
         let csvLinks = null;
+
+        // Save the image to serve it via URL
+        let imageUrl = null;
+        try {
+            // Create public dir if it doesn't exist
+            const publicDir = path.join(__dirname, "public");
+            if (!fs.existsSync(publicDir)) {
+                fs.mkdirSync(publicDir);
+            }
+            
+            // Save the image with a unique filename (timestamp + sanitized title)
+            const timestamp = Date.now();
+            const sanitizedTitle = artTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            const imageFilename = `${timestamp}-${sanitizedTitle}.jpg`;
+            const imagePath = path.join(publicDir, imageFilename);
+            
+            // Convert base64 to buffer and save
+            const imageBuffer = Buffer.from(image, 'base64');
+            fs.writeFileSync(imagePath, imageBuffer);
+            
+            // Set the image URL for the response
+            imageUrl = `https://smi-backend-8n2f.onrender.com/${imageFilename}`;
+            console.log(`✅ Artwork image saved at ${imagePath}`);
+        } catch (err) {
+            console.error("Error saving image:", err);
+            // Continue even if image saving fails
+        }
 
         if (exportCSV === "Yes") {
             const csvRegex = /```csv\s*([\s\S]+?)\s*```/g;
@@ -385,7 +415,8 @@ app.post("/analyze", async (req, res) => {
 
         const finalResponse = {
             analysis: analysisText,
-            csvLinks: csvLinks
+            csvLinks: csvLinks,
+            imageUrl: imageUrl
         };
 
         console.log("✅ Final API Response:", JSON.stringify(finalResponse, null, 2));
