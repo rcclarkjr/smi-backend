@@ -21,17 +21,17 @@ The Artwork to be analyzed might range from pure abstract to photo-realism. The 
   1. **Factors Table**:
   ```csv
   Factor#,Factor,Weight,Score,Extend,BFB
-  1,Composition,0.15,4.5,0.85,0.12
+  1,Composition,0.15,-,-,-
   ```
   
   2. **Questions Table**:
   ```csv
   Question#,Factor,Question,Score
-  1,Composition,"Is the composition balanced?",4
+  1,Composition,"Is the composition balanced?",1
   ```
 - These CSV blocks MUST be enclosed in triple backticks with csv label as shown above.
 - DO NOT include CSV data in the final analysis report.
-
+- IMPORTANT: You only need to fill in the Score column for the Questions Table with 1 (Yes) or 0 (No). The server will calculate the Score column for the Factors Table by summing the related questions.
 
 ---
 ## **Processing Instructions (Silent Execution)**
@@ -90,7 +90,7 @@ Factor#,Factor,Weight,Score,Extend,BFB
 ## **Questions Table Initialization**
 Question#,Factor,Question,Score
 1,Line,Does the artwork use line weight variation to enhance composition?,-
-2,Line,Do the lines effectively guide the viewer’s eye?,-
+2,Line,Do the lines effectively guide the viewer's eye?,-
 3,Line,Are lines controlled and purposeful?,-
 4,Line,Is the linework expressive or rhythmically engaging?,-
 5,Line,Do the lines contribute to the emotional impact of the artwork?,-
@@ -107,7 +107,7 @@ Question#,Factor,Question,Score
 16,Space,Does the artwork effectively use perspective techniques to create depth?,-
 17,Space,Is there a clear distinction between foreground, middle ground, and background elements?,-
 18,Space,Is the arrangement of positive and negative space balanced in a way that enhances composition?,-
-19,Space,Does the spatial arrangement guide the viewer’s eye smoothly through the artwork?,-
+19,Space,Does the spatial arrangement guide the viewer's eye smoothly through the artwork?,-
 20,Space,Does the use of space contribute to the emotional impact or storytelling of the piece?,-
 21,Color,Are colors chosen harmoniously to enhance mood and impact?,-
 22,Color,Does the use of color create depth or emphasis where needed?,-
@@ -130,7 +130,7 @@ Question#,Factor,Question,Score
 39,Saturation,Is saturation used to guide the eye?,-
 40,Saturation,Does the level of saturation match the emotional tone?,-
 41,Composition,Is the composition balanced and harmonious?,-
-42,Composition,Does the composition effectively guide the viewer’s eye?,-
+42,Composition,Does the composition effectively guide the viewer's eye?,-
 43,Composition,Are focal points well-placed within the composition?,-
 44,Composition,Do compositional elements contribute to unity and coherence?,-
 45,Composition,Does the composition enhance the overall impact of the artwork?,-
@@ -150,11 +150,11 @@ Question#,Factor,Question,Score
 59,Contrast,Are high and low contrasts used intentionally?,-
 60,Contrast,Does contrast enhance the storytelling or emotional impact?,-
 61,Emphasis,Does the artwork have a clear focal point?,-
-62,Emphasis,Is emphasis used effectively to draw the viewer’s eye?,-
+62,Emphasis,Is emphasis used effectively to draw the viewer's eye?,-
 63,Emphasis,Are important elements highlighted through contrast or placement?,-
 64,Emphasis,Does emphasis enhance the storytelling or theme?,-
 65,Emphasis,Is emphasis consistent across different areas of the artwork?,-
-66,Movement,Does the artwork guide the viewer’s eye smoothly through the composition?,-
+66,Movement,Does the artwork guide the viewer's eye smoothly through the composition?,-
 67,Movement,Are leading lines or directional elements present?,-
 68,Movement,Is there an intentional sense of motion or flow?,-
 69,Movement,Do repeated shapes or patterns contribute to movement?,-
@@ -162,7 +162,7 @@ Question#,Factor,Question,Score
 71,Rhythm,Are repeated elements used to create a sense of rhythm?,-
 72,Rhythm,Does rhythm contribute to a visual flow?,-
 73,Rhythm,Are spacing and repetition varied for interest?,-
-74,Rhythm,Does rhythm guide the viewer’s engagement with the piece?,-
+74,Rhythm,Does rhythm guide the viewer's engagement with the piece?,-
 75,Rhythm,Is rhythm effectively balanced with other design principles?,-
 76,Variety,Are different elements used to create interest and complexity?,-
 77,Variety,Is variety balanced to avoid chaos or monotony?,-
@@ -198,12 +198,12 @@ Question#,Factor,Question,Score
 107,Chiaroscuro,Does the shading effectively define volume and form?,-
 108,Chiaroscuro,Are transitions between light and shadow smooth where necessary?,-
 109,Chiaroscuro,Does chiaroscuro enhance the depth and dimensionality of the piece?,-
-110,Chiaroscuro,Is the use of contrast intentional to guide the viewer’s focus?,-
+110,Chiaroscuro,Is the use of contrast intentional to guide the viewer's focus?,-
 111,Impasto,Is paint applied in thick, textured layers where appropriate?,-
-112,Impasto,Does the impasto technique enhance the artwork’s expressiveness?,-
+112,Impasto,Does the impasto technique enhance the artwork's expressiveness?,-
 113,Impasto,Are variations in thickness and texture used to create depth?,-
 114,Impasto,Is impasto applied with control and intentionality?,-
-115,Impasto,Does the technique contribute to the artwork’s emotional impact?,-
+115,Impasto,Does the technique contribute to the artwork's emotional impact?,-
 116,Sfumato,Are transitions between tones and colors smooth and seamless?,-
 117,Sfumato,Does sfumato enhance the sense of atmosphere and realism?,-
 118,Sfumato,Is the blending of edges effectively executed?,-
@@ -223,7 +223,7 @@ Question#,Factor,Question,Score
 132,Pointillism,Does the technique successfully create blended optical effects?,-
 133,Pointillism,Is the use of complementary colors intentional and effective?,-
 134,Pointillism,Are the transitions between color dots smooth where necessary?,-
-135,Pointillism,Does pointillism contribute to the artwork’s vibrancy and depth?,-
+135,Pointillism,Does pointillism contribute to the artwork's vibrancy and depth?,-
 136,Wet-on-Wet,Is the wet-on-wet technique used effectively to blend colors?,-
 137,Wet-on-Wet,Does the fluidity of the paint application enhance the composition?,-
 138,Wet-on-Wet,Are transitions between colors and forms smooth and intentional?,-
@@ -248,7 +248,7 @@ Question#,Factor,Question,Score
 157,Viewer Engagement,Are elements arranged to encourage exploration?,-
 158,Viewer Engagement,Is engagement enhanced through contrast, rhythm, or balance?,-
 159,Viewer Engagement,Does the artwork invite interpretation or curiosity?,-
-160,Viewer Engagement,Is the viewer’s eye naturally guided through the piece?,-
+160,Viewer Engagement,Is the viewer's eye naturally guided through the piece?,-
 161,Emotional Resonance,Does the artwork connect with the viewer on a deeper level?,-
 162,Emotional Resonance,Are emotions effectively conveyed through artistic choices?,-
 163,Emotional Resonance,Is there a strong personal or universal message?,-
@@ -257,19 +257,10 @@ Question#,Factor,Question,Score
 
 ---
 
-## **Step 2: Compute Scores**
-1. **Calculate Factor Score**  
-   - Sum the **5 Question Scores** for each Factor (possible range: 0–5).
-  
-2. **Calculate Extend and BFB Values**  
-   - **Extend = Score × Weight** (rounded to 4 decimal places).  
-   - **BFB = Weight / Score** (rounded to 2 decimal places).  
-   - If **Score = 0**, set **BFB = "N/A"** (to avoid division errors).
-
-3. **Calculate Final Skill Mastery Index (SMI)**
-   - **SMI = Sum of Extend column** (rounded to 1 decimal place).  
-   - If **SMI > 5.0**, print:  
-     `"Error: SMI exceeds maximum value of 5.0. Please report this issue to rclark@valoraanalytics.com."`
+## **Step 2: Only Answer the Questions**
+- For the Questions Table, simply answer each question with a 1 (Yes) or 0 (No).
+- If in doubt or for edge cases, default to 0 (No).
+- DO NOT calculate the Factor Scores, Extend values, or BFB values. These will be calculated by the server.
 
 ---
 
@@ -279,20 +270,20 @@ Question#,Factor,Question,Score
 - Ensure the artTitle appears only once, directly below this header.)
 ### Title: {{artTitle}}
 - Do NOT print the title anywhere else in the report.)
-- Generate a **brief, fact-based description** of the artwork’s **style and subject**.
+- Generate a **brief, fact-based description** of the artwork's **style and subject**.
 - **DO NOT invent details**—base this ONLY on what is visible.
 - DO NOT make any references to BFB (calculations or meanings).
 
 ```
 ### **Notable Strengths**
 ```
-1. Identify the **3 Factors with the lowest BFB scores** (lower BFB = better execution on higher-valued Factors).  
+1. Identify the **3 factors** that appear to be the strongest based on your assessment.
 2. Provide **one concise explanation per factor**, ensuring the total explanation does not exceed **8 sentences in total**.
 
 ```
 ### **Skill Mastery Index (SMI) = {{SMI}}**
 ```
-- Provide a **2-sentence interpretation** of what this SMI level represents.
+- The SMI will be calculated by the server and inserted here.
+- Provide a **2-sentence interpretation** of what a high SMI level would represent.
 
 ```
-
