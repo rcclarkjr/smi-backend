@@ -50,7 +50,7 @@ app.post("/analyze", async (req, res) => {
                 messages: [
                     { 
                         role: "system", 
-                        content: "You are an expert art critic. Analyze the given image. When instructed to export CSV data, format it precisely within code blocks labeled as csv. For the Factors Table, include ALL 33 factors. For the Questions Table, include ALL 165 questions with scores of 1 (Yes) or 0 (No). DO NOT calculate the Scores in the Factors Table - the backend will do this calculation." 
+                        content: "You are an expert art critic. Analyze the given image. When instructed to export CSV data, format it precisely within code blocks labeled as csv. For the Factors Table, include ALL 33 factors. For the Questions Table, include ALL 165 questions with scores of 1 (Yes) or 0 (No). DO NOT calculate the Scores in the Factors Table - the backend will do this calculation. Always include a main heading 'Analysis of Skill Mastery' in your response." 
                     },
                     { 
                         role: "user", 
@@ -72,11 +72,11 @@ app.post("/analyze", async (req, res) => {
 
         let analysisText = response.data.choices[0].message.content;
 
-        // Debugging Log: Show Full OpenAI Response
-        console.log("🔍 Full AI Response:\n", analysisText);
-
         // Remove any userStyle tags from the response
         analysisText = analysisText.replace(/<userStyle>.*?<\/userStyle>/g, '');
+
+        // Debugging Log: Show Full OpenAI Response
+        console.log("🔍 Full AI Response:\n", analysisText);
 
         // Extract CSV Data (if enabled)
         let factorsCSV = "";
@@ -111,16 +111,24 @@ app.post("/analyze", async (req, res) => {
         }
 
         if (exportCSV === "Yes") {
-            const csvRegex = /```csv\s*([\s\S]+?)\s*```/g;
+            // More robust CSV regex that captures various code block formats
+            const csvRegex = /```(?:csv)?\s*([\s\S]+?)\s*```/g;
             let match;
             let csvFiles = 0;
+            let matches = [];
 
+            // Find all CSV code blocks
             while ((match = csvRegex.exec(analysisText)) !== null) {
+                matches.push(match[0]); // Store the full match
                 csvFiles++;
-                if (csvFiles === 1) {
+                
+                // Check if this looks like a factors table (has "Factor" in first row)
+                if (match[1].trim().startsWith("Factor#") || match[1].includes("Weight")) {
                     factorsCSV = match[1].trim();
                     console.log("Raw Factors CSV extracted:", factorsCSV);
-                } else if (csvFiles === 2) {
+                }
+                // Check if this looks like a questions table
+                else if (match[1].trim().startsWith("Question#") || match[1].includes("Question,Score")) {
                     questionsCSV = match[1].trim();
                     console.log("Raw Questions CSV extracted:", questionsCSV);
                 }
@@ -128,10 +136,35 @@ app.post("/analyze", async (req, res) => {
             
             // Verify if we extracted both CSV tables
             if (!factorsCSV || !questionsCSV) {
-                console.log("⚠️ WARNING: Did not extract both CSV tables from AI response.");
+                console.log("⚠️ WARNING: Did not extract both CSV tables correctly from AI response.");
                 console.log("Factors CSV found:", !!factorsCSV);
                 console.log("Questions CSV found:", !!questionsCSV);
+                console.log("Total CSV matches found:", matches.length);
+                
+                // If we found at least 2 matches but couldn't categorize them correctly
+                if (matches.length >= 2 && (!factorsCSV || !questionsCSV)) {
+                    // Default: first match is factors, second is questions
+                    if (!factorsCSV && matches.length > 0) {
+                        const firstMatch = csvRegex.exec(analysisText);
+                        if (firstMatch) factorsCSV = firstMatch[1].trim();
+                    }
+                    if (!questionsCSV && matches.length > 1) {
+                        // Reset and get second match
+                        csvRegex.lastIndex = 0;
+                        let firstSkipped = false;
+                        while ((match = csvRegex.exec(analysisText)) !== null) {
+                            if (firstSkipped) {
+                                questionsCSV = match[1].trim();
+                                break;
+                            }
+                            firstSkipped = true;
+                        }
+                    }
+                }
             }
+
+            // Remove all CSV blocks from the analysis text
+            analysisText = analysisText.replace(csvRegex, '').trim();
 
             // Process Questions CSV to calculate Factor scores
             if (questionsCSV) {
@@ -347,65 +380,10 @@ app.post("/analyze", async (req, res) => {
                 questionsCSV: questionsCSV ? "https://smi-backend-8n2f.onrender.com/questions.csv" : null
             };
             
-            // Remove CSV data from final response
-            analysisText = analysisText.replace(csvRegex, "").trim();
-            
-            // Ensure proper Markdown rendering by adding line breaks between sections
-            analysisText = analysisText
-                .replace(/^##\s+/gm, "\n## ") // Add empty line before headings
-                .replace(/^###\s+/gm, "\n### ") // Add empty line before subheadings
-                .replace(/\n\n\n+/g, "\n\n"); // Remove excessive line breaks
-            
             // Calculate and include the SMI in the analysis
             if (factorsCSV) {
                 const factorsLines = factorsCSV.trim().split('\n');
                 let totalExtend = 0;
                 
                 // Skip header row
-                for (let i = 1; i < factorsLines.length; i++) {
-                    try {
-                        const line = factorsLines[i].trim();
-                        if (!line) continue;
-                        
-                        const parts = parseCSVLine(line);
-                        if (parts.length >= 5) {
-                            const extend = parseFloat(parts[4]);
-                            if (!isNaN(extend)) {
-                                totalExtend += extend;
-                            }
-                        }
-                    } catch (err) {
-                        console.error(`Error calculating SMI for line ${i+1}:`, factorsLines[i], err);
-                    }
-                }
-                
-                // Round to 1 decimal place
-                const smi = totalExtend.toFixed(1);
-                console.log(`Calculated SMI: ${smi}`);
-                
-                // Replace SMI placeholder in the analysis text if it exists
-                analysisText = analysisText.replace(/{{SMI}}/g, smi);
-            }
-        }
-
-        // Remove any remaining userStyle tags
-        analysisText = analysisText.replace(/<userStyle>.*?<\/userStyle>/g, '');
-
-        const finalResponse = {
-            analysis: analysisText,
-            csvLinks: csvLinks,
-            imageUrl: imageUrl
-        };
-
-        console.log("✅ Final API Response:", JSON.stringify(finalResponse, null, 2));
-
-        res.json(finalResponse);
-
-    } catch (error) {
-        console.error("🔴 OpenAI API Error:", error.response?.data || error.message);
-        res.status(500).json({ error: error.response?.data?.error?.message || "OpenAI request failed" });
-    }
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+                for (let i = 1; i < fact
