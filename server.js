@@ -399,4 +399,13 @@ app.post("/analyze", async (req, res) => {
 
         console.log("✅ Final API Response:", JSON.stringify(finalResponse, null, 2));
 
-        res.
+        res.json(finalResponse);
+
+    } catch (error) {
+        console.error("🔴 OpenAI API Error:", error.response?.data || error.message);
+        res.status(500).json({ error: error.response?.data?.error?.message || "OpenAI request failed" });
+    }
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
