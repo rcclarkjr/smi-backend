@@ -117,6 +117,7 @@ app.post("/analyze", async (req, res) => {
     let factorsCSV = "";
     let questionsCSV = "";
     let csvLinks = null;
+    let smiValue = "0.0"; // Default SMI value
 
     // Save the image to serve it via URL
     let imageUrl = null;
@@ -364,13 +365,12 @@ app.post("/analyze", async (req, res) => {
               }
             }
             
-            // Calculate the average Score based on the Extends
-            // Round to 1 decimal place
-            const smi = totalExtend.toFixed(1);
-            console.log(`Calculated SMI: ${smi} from ${factorCount} factors`);
+            // Calculate the SMI and round to 1 decimal place
+            smiValue = totalExtend.toFixed(1);
+            console.log(`Calculated SMI: ${smiValue} from ${factorCount} factors`);
             
             // Replace SMI placeholder in the analysis text if it exists
-            analysisText = analysisText.replace(/{{SMI}}/g, smi);
+            analysisText = analysisText.replace(/{{SMI}}/g, smiValue);
           }
         }
       }
@@ -419,7 +419,8 @@ app.post("/analyze", async (req, res) => {
     const finalResponse = {
       analysis: analysisText,
       csvLinks: csvLinks,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+      smi: smiValue // Include the calculated SMI value in the response
     };
 
     // Send the response
