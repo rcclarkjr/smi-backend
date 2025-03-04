@@ -94,7 +94,7 @@ Question#,Factor,Question,Score
 3,Line,Are lines controlled and purposeful?,-
 4,Line,Is the linework expressive or rhythmically engaging?,-
 5,Line,Do the lines contribute to the emotional impact of the artwork?,-
-6,Shape,Are the shapes clear, intentional, and well-integrated?,-
+6,Shape,Are the shapes clear intentional and well-integrated?,-
 7,Shape,Do the shapes contribute to compositional balance?,-
 8,Shape,Is there a variety of shapes to enhance visual interest?,-
 9,Shape,Are geometric/organic shapes used purposefully to support the theme?,-
@@ -105,7 +105,7 @@ Question#,Factor,Question,Score
 14,Form,Do forms interact naturally within space?,-
 15,Form,Is form used expressively to enhance mood?,-
 16,Space,Does the artwork effectively use perspective techniques to create depth?,-
-17,Space,Is there a clear distinction between foreground, middle ground, and background elements?,-
+17,Space,Is there a clear distinction between foreground middle ground and background elements?,-
 18,Space,Is the arrangement of positive and negative space balanced in a way that enhances composition?,-
 19,Space,Does the spatial arrangement guide the viewer's eye smoothly through the artwork?,-
 20,Space,Does the use of space contribute to the emotional impact or storytelling of the piece?,-
@@ -144,7 +144,7 @@ Question#,Factor,Question,Score
 53,Balance,Are symmetrical or asymmetrical balances used intentionally?,-
 54,Balance,Does balance contribute to the overall harmony of the piece?,-
 55,Balance,Are contrasts in balance used for dramatic effect?,-
-56,Contrast,Are differences in tone, color, or form used effectively?,-
+56,Contrast,Are differences in tone color or form used effectively?,-
 57,Contrast,Does contrast create emphasis on focal points?,-
 58,Contrast,Is contrast balanced to avoid visual clutter?,-
 59,Contrast,Are high and low contrasts used intentionally?,-
@@ -166,7 +166,7 @@ Question#,Factor,Question,Score
 75,Rhythm,Is rhythm effectively balanced with other design principles?,-
 76,Variety,Are different elements used to create interest and complexity?,-
 77,Variety,Is variety balanced to avoid chaos or monotony?,-
-78,Variety,Do variations in shape, color, or texture enhance engagement?,-
+78,Variety,Do variations in shape color or texture enhance engagement?,-
 79,Variety,Does variety support the theme or intent?,-
 80,Variety,Is variety applied consistently throughout the artwork?,-
 81,Proportion,Are proportions accurate and consistent?,-
@@ -199,7 +199,7 @@ Question#,Factor,Question,Score
 108,Chiaroscuro,Are transitions between light and shadow smooth where necessary?,-
 109,Chiaroscuro,Does chiaroscuro enhance the depth and dimensionality of the piece?,-
 110,Chiaroscuro,Is the use of contrast intentional to guide the viewer's focus?,-
-111,Impasto,Is paint applied in thick, textured layers where appropriate?,-
+111,Impasto,Is paint applied in thick textured layers where appropriate?,-
 112,Impasto,Does the impasto technique enhance the artwork's expressiveness?,-
 113,Impasto,Are variations in thickness and texture used to create depth?,-
 114,Impasto,Is impasto applied with control and intentionality?,-
@@ -240,13 +240,13 @@ Question#,Factor,Question,Score
 149,Creativity,Are materials or techniques used in a novel manner?,-
 150,Creativity,Does the artwork push boundaries or introduce new perspectives?,-
 151,Mood,Is a clear emotional tone present?,-
-152,Mood,Do color, composition, and form contribute to mood?,-
+152,Mood,Do color composition and form contribute to mood?,-
 153,Mood,Is mood consistent with the theme or intent?,-
 154,Mood,Does the artwork successfully evoke a response?,-
 155,Mood,Is mood used as an effective storytelling element?,-
 156,Viewer Engagement,Does the artwork capture and sustain attention?,-
 157,Viewer Engagement,Are elements arranged to encourage exploration?,-
-158,Viewer Engagement,Is engagement enhanced through contrast, rhythm, or balance?,-
+158,Viewer Engagement,Is engagement enhanced through contrast rhythm or balance?,-
 159,Viewer Engagement,Does the artwork invite interpretation or curiosity?,-
 160,Viewer Engagement,Is the viewer's eye naturally guided through the piece?,-
 161,Emotional Resonance,Does the artwork connect with the viewer on a deeper level?,-
