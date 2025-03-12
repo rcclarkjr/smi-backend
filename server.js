@@ -10,7 +10,30 @@ const app = express();
 // Allow larger image sizes (50MB)
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
-app.use(cors());
+
+// Configure CORS to accept requests from multiple origins
+app.use(cors({
+  origin: [
+    'https://robert-clark-4dee.mykajabi.com', 
+    'https://advisory.valoraanalytics.com',
+    'http://localhost:5000', 
+    'https://smi-backend-8n2f.onrender.com'
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Add a fallback CORS handler for any missed routes
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  next();
+});
 
 // Serve static files from the "public" folder (for downloading CSVs)
 app.use(express.static("public"));
@@ -54,11 +77,27 @@ function parseCSVLine(line) {
 
 app.post("/analyze", async (req, res) => {
   try {
+    console.log("Received analyze request for SMI calculation");
     const { prompt, image, artTitle, artistName } = req.body;
 
-    if (!prompt || !image) {
-      return res.status(400).json({ error: "Prompt and image are required" });
+    if (!prompt) {
+      console.log("Missing prompt in request");
+      return res.status(400).json({ error: { message: "Prompt is required" } });
     }
+    
+    if (!image) {
+      console.log("Missing image in request");
+      return res.status(400).json({ error: { message: "Image is required" } });
+    }
+
+    if (!OPENAI_API_KEY) {
+      console.log("Missing OpenAI API key");
+      return res.status(500).json({ error: { message: "Server configuration error: Missing API key" } });
+    }
+
+    // Log info about the request (without the full image data for brevity)
+    console.log(`Processing SMI request for artwork: "${artTitle}" by ${artistName}`);
+    console.log(`Prompt length: ${prompt.length} characters`);
 
     // Toggle CSV Export (Set to "Yes" for debugging, "No" for normal mode)
     const exportCSV = "Yes";
@@ -78,10 +117,12 @@ app.post("/analyze", async (req, res) => {
       finalPrompt = `ExportCSV = ${exportCSV}\n\nUser-provided Artwork Title: "${artTitle}". ${artistInfo}\nThe prompt will handle where to place this information.`;
     }
 
+    console.log("Sending request to OpenAI API");
+    
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-4-turbo",
+        model: "gpt-4-turbo", // Updated to match the model we're using for RI
         messages: [
           { 
             role: "system", 
@@ -104,6 +145,13 @@ app.post("/analyze", async (req, res) => {
         }
       }
     );
+
+    console.log("Received response from OpenAI API");
+    
+    if (!response.data || !response.data.choices || !response.data.choices[0] || !response.data.choices[0].message) {
+      console.log("Invalid response format from OpenAI:", JSON.stringify(response.data));
+      return res.status(500).json({ error: { message: "Invalid response from OpenAI API" } });
+    }
 
     let analysisText = response.data.choices[0].message.content;
 
@@ -423,15 +471,34 @@ app.post("/analyze", async (req, res) => {
       smi: smiValue // Include the calculated SMI value in the response
     };
 
+    console.log("Sending final response to client");
     // Send the response
     res.json(finalResponse);
 
   } catch (error) {
-    console.error("🔴 OpenAI API Error:", error.message);
+    console.error("🔴 OpenAI API Error:", error);
+    
+    // Detailed error logging
     if (error.response) {
-      console.error("Error response data:", error.response.data);
+      console.error("Response status:", error.response.status);
+      console.error("Response headers:", error.response.headers);
+      console.error("Response data:", JSON.stringify(error.response.data));
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+    } else {
+      console.error("Error setting up request:", error.message);
     }
-    res.status(500).json({ error: error.message || "OpenAI request failed" });
+    
+    const errorMessage = error.response?.data?.error?.message || 
+                         error.message || 
+                         "An unknown error occurred";
+                         
+    res.status(500).json({ 
+      error: { 
+        message: errorMessage,
+        details: error.toString()
+      } 
+    });
   }
 });
 
